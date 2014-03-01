@@ -2,18 +2,6 @@
  * Created by fred on 3/1/14.
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
 FUNCTIONS = {
     xBoard: 0,
     oBoard: 0,
@@ -21,6 +9,12 @@ FUNCTIONS = {
     context: null,
     width: 0,
     height: 0,
+    x: 'X',
+    board: [
+        [, , ],
+        [, , ],
+        [, , ]
+    ],
 
     drawBoard: function () {
         var board = document.getElementById('board');
@@ -48,7 +42,7 @@ FUNCTIONS = {
         FUNCTIONS.context.stroke();
         FUNCTIONS.context.closePath();
     },
-    drawX: function (x, y) {
+    drawSymbol: function (x, y, symbol) {
 
         var context = FUNCTIONS.context
         var width = FUNCTIONS.width
@@ -68,44 +62,55 @@ FUNCTIONS = {
         var endX = (x + 1) * (width / 3) - offsetX * 2;
         var endY = (y + 1) * (height / 3) - offsetY * 2;
 
-        context.moveTo(beginX, beginY);
-        context.lineTo(endX, endY);
+        if (symbol === FUNCTIONS.x) {
+            context.moveTo(beginX, beginY);
+            context.lineTo(endX, endY);
 
-        context.moveTo(beginX, endY);
-        context.lineTo(endX, beginY);
+            context.moveTo(beginX, endY);
+            context.lineTo(endX, beginY);
+        } else {
+            context.arc(beginX + ((endX - beginX) / 2), beginY + ((endY - beginY) / 2), (endX - beginX) / 2, 0, Math.PI * 2, true);
+        }
 
-        context.stroke();
-        context.closePath();
-    },
-    drawO: function (x, y) {
-
-        var context = FUNCTIONS.context
-        var width = FUNCTIONS.width
-        var height = FUNCTIONS.height
-
-        context.beginPath();
-
-        context.strokeStyle = '#0000ff';
-        context.lineWidth = 4;
-
-        var offsetX = (width / 3) * 0.1;
-        var offsetY = (height / 3) * 0.1;
-
-        var beginX = x * (width / 3) + offsetX;
-        var beginY = y * (height / 3) + offsetY;
-
-        var endX = (x + 1) * (width / 3) - offsetX * 2;
-        var endY = (y + 1) * (height / 3) - offsetY * 2;
-
-        context.arc(beginX + ((endX - beginX) / 2), beginY + ((endY - beginY) / 2), (endX - beginX) / 2, 0, Math.PI * 2, true);
-
+        FUNCTIONS.board[x][y] = symbol
         context.stroke();
         context.closePath();
     },
 
-    handleEvents:function(){
-        $('#board').click(function() {
-            alert( "Handler for .click() called." );
+    ajaxPlayerMove: function (x, y) {
+
+    },
+
+    ajaxGetStartMove: function () {
+
+    },
+
+    isValidMove: function (x, y) {
+        if (x <= 2 && y <= 2) {
+            if (FUNCTIONS.board[x][y] == null) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    handleEvents: function () {
+        $('#board').click(function (e) {
+            var y = Math.floor(e.clientY / (FUNCTIONS.height / 3));
+            var x = Math.floor(e.clientX / (FUNCTIONS.width / 3));
+
+            // Check if the move is valid (i.e. there is no other symbols in that square)
+            if (FUNCTIONS.isValidMove(x, y)) {
+                // First draw X on screen
+                FUNCTIONS.drawSymbol(x, y, FUNCTIONS.x);
+
+                // Call server with the move made by the player
+                FUNCTIONS.ajaxPlayerMove(x, y);
+            } else {
+                alert("Not a valid move, there is already a symbol in the square");
+            }
+
+            alert("Handler for .click() called.");
         });
     }
 }
@@ -113,8 +118,18 @@ FUNCTIONS = {
 
 INIT = {
     init: function () {
-        FUNCTIONS.drawBoard()
-        FUNCTIONS.handleEvents()
+        // Draw board
+        FUNCTIONS.drawBoard();
+
+        // Decide who starts
+        var playerStarting = Math.floor(Math.random() * 2) == 1
+
+        if (!playerStarting) {
+            FUNCTIONS.ajaxGetStartMove();
+        }
+
+        // Handling click events from user
+        FUNCTIONS.handleEvents();
     }
 }
 
