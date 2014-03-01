@@ -10,6 +10,7 @@ FUNCTIONS = {
     width: 0,
     height: 0,
     x: 'X',
+    mode: 'AI',
     board: [
         [, , ],
         [, , ],
@@ -109,8 +110,6 @@ FUNCTIONS = {
             } else {
                 alert("Not a valid move, there is already a symbol in the square");
             }
-
-            alert("Handler for .click() called.");
         });
     }
 }
@@ -122,9 +121,9 @@ INIT = {
         FUNCTIONS.drawBoard();
 
         // Decide who starts
-        var playerStarting = Math.floor(Math.random() * 2) == 1
+        var xStarts = Math.floor(Math.random() * 2) == 1
 
-        if (!playerStarting) {
+        if (!xStarts && FUNCTIONS.mode === 'AI') {
             FUNCTIONS.ajaxGetStartMove();
         }
 
