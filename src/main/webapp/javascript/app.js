@@ -117,6 +117,9 @@ FUNCTIONS = {
 
 INIT = {
     init: function () {
+        // Set mode
+        FUNCTIONS.mode = 'AI'
+
         // Draw board
         FUNCTIONS.drawBoard();
 
