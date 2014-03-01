@@ -87,12 +87,7 @@ FUNCTIONS = {
     },
 
     isValidMove: function (x, y) {
-        if (x <= 2 && y <= 2) {
-            if (FUNCTIONS.board[x][y] == null) {
-                return true;
-            }
-        }
-        return false;
+        return ((x <= 2 && y <= 2) && FUNCTIONS.board[x][y] == null);
     },
 
     handleEvents: function () {
