@@ -1,4 +1,8 @@
 # TicTacToe #
+A small project to try out Scalatra and jade, and also to learn some machine learning.
+
+Modified some html and javascript from: http://www.zeewe.com/blog/html5-canvas-demo-tictactoe/
+
 
 ## Build & Run ##
 
