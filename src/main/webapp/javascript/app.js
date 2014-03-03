@@ -11,6 +11,7 @@ FUNCTIONS = {
     height: 0,
     x: 'X',
     mode: 'AI',
+    level: 'EASY',
     board: [
         [, , ],
         [, , ],
@@ -114,6 +115,7 @@ INIT = {
     init: function () {
         // Set mode
         FUNCTIONS.mode = 'AI'
+        FUNCTIONS.level = 'EASY'
 
         // Draw board
         FUNCTIONS.drawBoard();
