@@ -6,8 +6,8 @@ package com.github.freddd.board
 class Board {
   var board = Array.ofDim[String](3,3)
 
-  def move(x: Int, y: Int): Boolean = validMove(x,y) match {
-    case true => board(x)(y); true;
+  def move(symbol: String, x: Int, y: Int): Boolean = validMove(x,y) match {
+    case true => board(x)(y) = symbol; true;
     case _ => false;
   }
   def validMove(x: Int, y: Int): Boolean = (x <= 2 && y <= 2) && board(x)(y) == null;
