@@ -4,6 +4,7 @@ import org.specs2.mutable._
 import Symbol._
 
 /**
+ * Tests for the tic tac toe board
  * Created by fred on 3/3/14.
  */
 class BoardSpec extends Specification {
