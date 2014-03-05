@@ -168,19 +168,26 @@ class BoardSpec extends Specification {
     }
   }
 
-  /*
+
   "board.win" should {
 
-    "Succeed if square 1, 2, 3 all have the same symbol" in {
+    "Succeed if X or O has populated three consecutive squares" in {
+      false must beTrue
+    }
 
+    "Fail if neither X nor O has populated three consecutive squares" in {
+      false must beTrue
     }
   }
 
   "board.draw" should {
 
-    "Succeed if square 1, 2, 3 all have the same symbol" in {
+    "Succeed if neither X nor O has populated three consecutive squares" in {
+      false must beTrue
+    }
 
+    "Fail if X or O has populated three consecutive squares" in {
+      false must beTrue
     }
   }
-  */
 }

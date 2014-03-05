@@ -102,6 +102,10 @@ class Board {
    * @return
    */
   override def toString: String = {
-    board.deep.mkString("\n")
+    var str: String = ""
+
+    board.foreach { row => str = "| " + row(0).getOrElse(" ") + " | " + row(1).getOrElse(" ") + " | " + row(2).getOrElse(" ") + " | "}
+
+    str
   }
 }
