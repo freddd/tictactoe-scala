@@ -3,6 +3,7 @@ package com.github.freddd.board
 import Symbol._
 
 /**
+ * Representing the tic tac toe board
  * Created by fred on 3/3/14.
  */
 class Board {
@@ -10,9 +11,9 @@ class Board {
 
   /**
    * Convenience method to move a symbol into a square
-   * @param symbol
-   * @param x
-   * @param y
+   * @param symbol X or O
+   * @param x x-axis
+   * @param y y-axis
    */
   def move(symbol: Symbol, x: Int, y: Int): Boolean = validMove(x,y) match {
     case true => board(x)(y) = Some(symbol); true
@@ -21,8 +22,8 @@ class Board {
 
   /**
    * Convenience method to make sure that the move is valid (and not out of bounds or trying to populate a square that is already populated
-   * @param x
-   * @param y
+   * @param x x-axis
+   * @param y y-axis
    * @return
    */
   def validMove(x: Int, y: Int): Boolean = (x <= 2 && y <= 2) && !board(x)(y).isDefined
@@ -51,14 +52,14 @@ class Board {
 
   /**
    * Convenience method to know if the game has been won by either player
-   * @param symbol
+   * @param symbol X or O
    * @return
    */
   def win(symbol: Symbol): Boolean = horizontal(symbol) || vertical(symbol) || diagonal(symbol)
 
   /**
    * Used by <method>win</method> to assess if either player has 3 symbols in a row horizontally
-   * @param symbol
+   * @param symbol X or O
    * @return
    */
   private[board] def horizontal(symbol: Symbol): Boolean = {
@@ -67,7 +68,7 @@ class Board {
 
   /**
    * Used by <method>win</method> to assess if either player has 3 symbols in a row vertically
-   * @param symbol
+   * @param symbol X or O
    * @return
    */
   private[board] def vertical(symbol: Symbol): Boolean = {
@@ -79,6 +80,13 @@ class Board {
     validate(symbol, all(2)) && validate(symbol, all(5)) && validate(symbol, all(8))
   }
 
+  /**
+   * Validating whether or not a square is populated, if it's populated it validates whether or not the
+   * symbol is the same as the one in the square
+   * @param symbol X or O
+   * @param square A square on the board
+   * @return
+   */
   private[board] def validate(symbol: Symbol, square: Option[Symbol]): Boolean = {
     square match {
       case Some(_) => square.get.equals(symbol)
@@ -88,7 +96,7 @@ class Board {
 
   /**
    * Used by <method>win</method> to assess if either player has 3 symbols in a row diagonally
-   * @param symbol
+   * @param symbol X or O
    * @return
    */
   private[board] def diagonal(symbol: Symbol): Boolean = {

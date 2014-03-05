@@ -172,22 +172,66 @@ class BoardSpec extends Specification {
   "board.win" should {
 
     "Succeed if X or O has populated three consecutive squares" in {
-      false must beTrue
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,0)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.O,1,2)
+      b.move(Symbol.O,2,0)
+      b.move(Symbol.X,2,1)
+      b.move(Symbol.X,2,2)
+
+      b.win(Symbol.X) must beTrue
     }
 
     "Fail if neither X nor O has populated three consecutive squares" in {
-      false must beTrue
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,0)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.O,1,2)
+      b.move(Symbol.O,2,0)
+      b.move(Symbol.X,2,1)
+      b.move(Symbol.O,2,2)
+
+      b.win(Symbol.X) must beFalse
     }
   }
 
   "board.draw" should {
 
     "Succeed if neither X nor O has populated three consecutive squares" in {
-      false must beTrue
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,0)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.O,1,2)
+      b.move(Symbol.O,2,0)
+      b.move(Symbol.X,2,1)
+      b.move(Symbol.O,2,2)
+
+      b.draw must beTrue
     }
 
     "Fail if X or O has populated three consecutive squares" in {
-      false must beTrue
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,0)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.O,1,2)
+      b.move(Symbol.O,2,0)
+      b.move(Symbol.X,2,1)
+      b.move(Symbol.X,2,2)
+
+      b.draw must beFalse
     }
   }
 }
