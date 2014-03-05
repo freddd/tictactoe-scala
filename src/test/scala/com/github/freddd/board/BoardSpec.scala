@@ -63,12 +63,15 @@ class BoardSpec extends Specification {
 
   }
 
-
   "board.move" should {
     "Succeed if there is a symbol in populated square" in {
       val b: Board = new Board()
-      b.move(Symbol.X,0,0)
-      b.board(0)(0).equals(Some(Symbol.X)) must beTrue
+      b.move(Symbol.X,0,0) && b.board(0)(0).equals(Some(Symbol.X)) must beTrue
+    }
+
+    "Fail if there is a symbol in populated square" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,3,3) must beFalse
     }
   }
 
@@ -82,5 +85,102 @@ class BoardSpec extends Specification {
     }
   }
 
+  "board.validate" should {
+    val b: Board = new Board()
+    "Succeed if the same symbol is in the square as being sent in" in {
+      b.validate(Symbol.X, Some(Symbol.X)) must beTrue
+    }
 
+    "Fail if the same symbol is in the square as being sent in" in {
+      b.validate(Symbol.X, Some(Symbol.O)) must beFalse
+    }
+  }
+
+  "board.diagonal" should {
+
+    "Succeed if square 1, 5, 9 all have the same symbol" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.X,2,2)
+
+      b.diagonal(Symbol.X) must beTrue
+    }
+
+    "Succeed if square 3, 5, 7 all have the same symbol" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.X,2,0)
+
+      b.diagonal(Symbol.X) must beTrue
+    }
+
+    "Fail if square 3, 5, 7 does not have the same symbol" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,1)
+      b.move(Symbol.X,2,0)
+
+      b.diagonal(Symbol.X) must beFalse
+    }
+  }
+
+  "board.vertical" should {
+
+    "Succeed if square 1, 4, 7 all have the same symbol" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.X,1,0)
+      b.move(Symbol.X,2,0)
+
+      b.vertical(Symbol.X) must beTrue
+    }
+
+    "Fail if square 1, 4, 7 does not have the same symbol" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,1,0)
+      b.move(Symbol.X,2,0)
+
+      b.vertical(Symbol.X) must beFalse
+    }
+  }
+
+  "board.horizontal" should {
+
+    "Succeed if square 1, 2, 3 all have the same symbol" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.X,0,1)
+      b.move(Symbol.X,0,2)
+
+      b.horizontal(Symbol.X) must beTrue
+    }
+
+    "Fail if square 1, 2, 3 does not have the same symbol" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+
+      b.horizontal(Symbol.X) must beFalse
+    }
+  }
+
+  /*
+  "board.win" should {
+
+    "Succeed if square 1, 2, 3 all have the same symbol" in {
+
+    }
+  }
+
+  "board.draw" should {
+
+    "Succeed if square 1, 2, 3 all have the same symbol" in {
+
+    }
+  }
+  */
 }

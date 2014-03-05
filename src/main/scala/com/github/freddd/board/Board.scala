@@ -8,8 +8,15 @@ import Symbol._
 class Board {
   var board = Array.tabulate[Option[Symbol]](3,3)((x, y) => None) //Array.ofDim[Option[Symbol]](3,3)
 
-  def move(symbol: Symbol, x: Int, y: Int): Unit = validMove(x,y) match {
-    case true => board(x)(y) = Some(symbol)
+  /**
+   * Convenience method to move a symbol into a square
+   * @param symbol
+   * @param x
+   * @param y
+   */
+  def move(symbol: Symbol, x: Int, y: Int): Boolean = validMove(x,y) match {
+    case true => board(x)(y) = Some(symbol); true
+    case false => false
   }
 
   /**
@@ -54,7 +61,7 @@ class Board {
    * @param symbol
    * @return
    */
-  private def horizontal(symbol: Symbol): Boolean = {
+  private[board] def horizontal(symbol: Symbol): Boolean = {
     board exists ( row => row forall (col => col.isDefined && col.get.equals(symbol)))
   }
 
@@ -63,7 +70,7 @@ class Board {
    * @param symbol
    * @return
    */
-  private def vertical(symbol: Symbol): Boolean = {
+  private[board] def vertical(symbol: Symbol): Boolean = {
     //board.flatten.zipWithIndex.filter(p => p._2 % 3 == 0).forall(p => p._1.isDefined && p._1.get.equals(symbol))
 
     val all: Array[Option[Symbol]] = board.flatten
@@ -72,7 +79,7 @@ class Board {
     validate(symbol, all(2)) && validate(symbol, all(5)) && validate(symbol, all(8))
   }
 
-  private def validate(symbol: Symbol, square: Option[Symbol]): Boolean = {
+  private[board] def validate(symbol: Symbol, square: Option[Symbol]): Boolean = {
     square match {
       case Some(_) => square.get.equals(symbol)
       case _ => false
@@ -84,7 +91,7 @@ class Board {
    * @param symbol
    * @return
    */
-  private def diagonal(symbol: Symbol): Boolean = {
+  private[board] def diagonal(symbol: Symbol): Boolean = {
     val all: Array[Option[Symbol]] = board.flatten
     validate(symbol, all(0)) && validate(symbol, all(4)) && validate(symbol, all(8)) ||
     validate(symbol, all(2)) && validate(symbol, all(4)) && validate(symbol, all(6))
