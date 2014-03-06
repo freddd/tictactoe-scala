@@ -51,7 +51,7 @@ class Board {
   }
 
   /**
-   * Convenience method to know if the game has been won by either player
+   * Convenience method to know if the game has been won by player with symbol
    * @param symbol X or O
    * @return
    */
@@ -112,7 +112,7 @@ class Board {
   override def toString: String = {
     var str: String = ""
 
-    board.foreach { row => str = "| " + row(0).getOrElse(" ") + " | " + row(1).getOrElse(" ") + " | " + row(2).getOrElse(" ") + " | "}
+    board.foreach { row => str += "| " + row(0).getOrElse(" ") + " | " + row(1).getOrElse(" ") + " | " + row(2).getOrElse(" ") + " | "}
 
     str
   }

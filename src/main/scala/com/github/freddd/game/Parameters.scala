@@ -1,7 +1,6 @@
 package com.github.freddd.game
 
-import com.github.freddd.player.{Player, Level, Mode}
-import Level.Level
+import com.github.freddd.player.{Player, Mode}
 import Mode.Mode
 
 
@@ -12,7 +11,7 @@ import Mode.Mode
 class Parameters() {
   var first: Boolean = true
   var mode: Mode = Mode.AI
-  var players: Seq[Player] = Seq.empty
-  var lastWinner = Option[Player]
+  var players: List[Player] = List.empty
+  var lastWinner: Option[Player] = None
   var starting: Player = null
 }

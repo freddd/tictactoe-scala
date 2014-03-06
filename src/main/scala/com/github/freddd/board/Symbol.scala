@@ -6,5 +6,5 @@ package com.github.freddd.board
  */
 object Symbol extends Enumeration{
   type Symbol = Value
-  val X, O = Value
+  val X, O, UNDEFINED = Value
 }

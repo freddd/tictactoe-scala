@@ -1,8 +1,15 @@
 package com.github.freddd.game
 
-import com.github.freddd.player.{Player, Level, Mode}
+import com.github.freddd.player._
 import Mode.Mode
 import Level.Level
+import scala.util.Random
+import com.github.freddd.board._
+import com.github.freddd.player.Mode.Mode
+import com.github.freddd.player.Mode
+import com.github.freddd.player.AI
+import com.github.freddd.player.Level.Level
+import com.github.freddd.player.Level
 
 
 /**
@@ -36,10 +43,10 @@ object Main extends App {
     println(" Tic tac toe ")
     println(" - - - - - - - - - ")
     println(" Rules: ")
-    println(" 1) Player X starts, after that it's alternating turns (X,O,X,O etc) ")
-    println(" 2) Either player can win by having three of their symbols (X or O) ")
+    println(" a) Player X starts (random), after that it's alternating turns (X,O,X,O etc) ")
+    println(" b) Either player can win by having three of their symbols (X or O) ")
     println("    in a row (horizontal, vertical or diagonal) ")
-    println(" 3) In cases of multiple rounds, the player that won last round will start as O" )
+    println(" c) In cases of multiple rounds, the player that won last round will start as O" )
     println("    if last round was a draw the order will be the same ")
     println(" - - - - - - - - - ")
   }
@@ -83,18 +90,10 @@ object Main extends App {
 
       val l: Int = Console.readInt()
       level = l match {
-        case 1 => {
-          Level.EASY
-        }
-        case 2 => {
-          Level.MEDIUM
-        }
-        case 3 => {
-          Level.IMPOSSIBLE
-        }
-        case _ => {
-          Level.UNDEFINED
-        }
+        case 1 => Level.EASY
+        case 2 => Level.MEDIUM
+        case 3 => Level.IMPOSSIBLE
+        case _ => Level.UNDEFINED
       }
     }
     level
@@ -142,7 +141,18 @@ object Main extends App {
    * Handling the actual game play
    */
   private def play(parameters: Parameters) {
+    val board = new Board()
+    println("")
+    println(" Starting is player (X): " + parameters.starting.name + " currently holding " + parameters.starting.wins + " and " + parameters.starting.losses)
+    println(" ----------------------- ")
+    println(" " + board.toString)
+    println("")
 
+    while(!board.draw || board.win(Symbol.X) || board.win(Symbol.O)){
+      println(" ")
+    }
+
+    parameters.lastWinner = parameters.players.find()
   }
 
   /**
@@ -151,32 +161,46 @@ object Main extends App {
    * @return
    */
   private def parameters(parameters: Parameters): Parameters = {
+    // Ask user for mode
     parameters.mode = mode()
 
-    parameters.mode match {
-      case Mode.AI => {
+    // Ask for first player name
+    parameters.players = parameters.players ++ List(new Human(playerInfo(1)))
 
-        parameters.level = Some(level())
-      }
+    // Either ask for AI level or Player 2 name
+    parameters.mode match {
+      case Mode.AI => parameters.players = parameters.players ++ List(new AI(level()))
+      case _ => parameters.players = parameters.players ++ List(new Human(playerInfo(2)))
     }
 
+    // Decide who is starting
     parameters.starting = starts(parameters)
 
     parameters
   }
 
   /**
-   * Deciding who will start
-   * @param parameters
+   * Asking for player name
+   * @param number
    * @return
+   */
+  private def playerInfo(number: Int): String = {
+    println("")
+    println(" What is the name of player " + number + " ?")
+    print(" Name: ")
+    Console.readLine()
+  }
+
+  /**
+   * Deciding who will start, if this is the first match the player who will start is chosen on random
+   * Else it will chose the player who lost the last gamee
+   * @param parameters game parameters
+   * @return the player that is to start
    */
   private def starts(parameters: Parameters): Player = {
     parameters.first match {
-      case false => {
-        parameters.lastWinner match {
-          case Some(_) => parameters.
-        }
-      }
+      case true => Random.shuffle(parameters.players).head
+      case false => parameters.players.find(p => !p.equals(parameters.lastWinner.get)).getOrElse(parameters.lastWinner.get)
     }
   }
 
