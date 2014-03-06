@@ -1,4 +1,4 @@
-package com.github.freddd.board
+package com.github.freddd.player
 
 /**
  * Representing the mode
@@ -6,5 +6,5 @@ package com.github.freddd.board
  */
 object Mode extends Enumeration{
   type Mode = Value
-  val AI, PLAYER = Value
+  val AI, PLAYER, UNDEFINED = Value
 }
