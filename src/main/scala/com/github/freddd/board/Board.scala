@@ -128,7 +128,7 @@ class Board {
   override def toString: String = {
     var str: String = ""
 
-    board.foreach { row => str += "| " + row(0).getOrElse(" ") + " | " + row(1).getOrElse(" ") + " | " + row(2).getOrElse(" ") + " | "}
+    board.foreach { row => str += " | " + row(0).getOrElse(" ") + " | " + row(1).getOrElse(" ") + " | " + row(2).getOrElse(" ") + " | \n"}
 
     str
   }

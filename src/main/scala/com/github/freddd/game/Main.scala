@@ -8,7 +8,7 @@ import com.github.freddd.player.Mode
 import com.github.freddd.player.AI
 import com.github.freddd.player.Level.Level
 import com.github.freddd.player.Level
-
+import com.github.freddd.board.Symbol._
 
 /**
  * Main method to run the program
@@ -142,28 +142,21 @@ object Main extends App {
     val board = new Board()
     println("")
     println(" Starting is player (X): " + parameters.starting.name + " currently holding " + parameters.starting.wins + " and " + parameters.starting.losses)
-    println(" 1,1 -> 3,3 ")
     println(" ----------------------- ")
-    println(" " + board.toString)
+    println(" X,Y (1,1 -> 3,3) ")
+    println(board.toString)
     println("")
 
     var current = parameters.starting.symbol
 
     while (!board.draw || !board.win(Symbol.X) || !board.win(Symbol.O)) {
 
-      print(" Play (X, Y): ")
-      val move: String = Console.readLine()
-
-      try {
-        val x = move.split(",")(0).toInt - 1
-        val y = move.split(",")(1).toInt - 1
-
-        board.validMove(x, y) match {
-          case true => board.move(current, x, y)
-          case false => println(" Please try again, there is already a symbol in the square or it's out of bounds ")
+      parameters.mode match {
+        case Mode.AI => parameters.players.find(p => p.isInstanceOf[AI]).get.symbol.equals(current) match {
+          case true => moveAI(board, Level.UNDEFINED) // TODO change to level inputed by player
+          case false => playerInput(board, current)
         }
-      } catch {
-        case e: NumberFormatException => println(" It has to be a number.... ")
+        case Mode.PLAYER => playerInput(board, current)
       }
 
       current = current match {
@@ -171,10 +164,44 @@ object Main extends App {
         case _ => Symbol.X
       }
 
-      println(" " + board.toString)
+      println(board.toString)
     }
 
     setPlayerData(board.draw, parameters, parameters.players.find(p => p.symbol.equals(board.winner)))
+  }
+
+  /**
+   * Calls for determining the AI's next move
+   */
+  private def moveAI(board: Board, level: Level){
+
+  }
+
+  /**
+   * Ask the player for his/her next move
+   * @param board the board
+   * @param current the current symbol
+   */
+  private def playerInput(board: Board, current: Symbol){
+    var inputNOK = true
+
+    while(inputNOK){
+      print(" Player: " + current +  " - Play (X, Y): ")
+      val move: String = Console.readLine()
+
+
+      try {
+        val x = move.split(",")(0).toInt - 1
+        val y = move.split(",")(1).toInt - 1
+
+        board.validMove(x, y) match {
+          case true => board.move(current, x, y); inputNOK = false
+          case false => println(" Please try again, there is already a symbol in the square or it's out of bounds ")
+        }
+      } catch {
+        case e: NumberFormatException => println(" It has to be a number.... ")
+      }
+    }
   }
 
   /**
@@ -243,10 +270,15 @@ object Main extends App {
    * @return the player that is to start
    */
   private def starts(parameters: Parameters): Player = {
-    parameters.first match {
+    val starting = parameters.first match {
       case true => Random.shuffle(parameters.players).head
       case false => parameters.players.find(p => !p.equals(parameters.lastWinner.get)).getOrElse(parameters.lastWinner.get)
     }
+    
+    parameters.players.find(p => !p.equals(starting)).get.symbol = Symbol.O
+    starting.symbol = Symbol.X
+
+    starting
   }
 
 }
