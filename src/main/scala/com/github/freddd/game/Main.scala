@@ -148,8 +148,9 @@ object Main extends App {
     println("")
 
     var current = parameters.starting.symbol
+    var gameOver = false
 
-    while (!board.draw || !board.win(Symbol.X) || !board.win(Symbol.O)) {
+    while (!gameOver) {
 
       parameters.mode match {
         case Mode.AI => parameters.players.find(p => p.isInstanceOf[AI]).get.symbol.equals(current) match {
@@ -165,6 +166,7 @@ object Main extends App {
       }
 
       println(board.toString)
+      gameOver = board.draw || board.win(Symbol.X) || board.win(Symbol.O) // TODO create a convenience method in Board
     }
 
     setPlayerData(board.draw, parameters, parameters.players.find(p => p.symbol.equals(board.winner)))
@@ -237,14 +239,16 @@ object Main extends App {
    */
   private def setPlayerData(draw: Boolean, params: Parameters, winner: Option[Player]): Parameters = {
     draw match {
-      case true => params.players = params.players.map(p => p.draw)
+      case true => println( "A draw!! Better luck next time"); params.players = params.players.map(p => p.draw)
       case _ => {
-        val w = params.players.find(p => p.symbol.equals(winner.get)).get
+        val w = winner.get
         w.win
         params.lastWinner = Some(w)
 
-        val loser = params.players.find(p => !p.symbol.equals(winner.get)).get
+        val loser = params.players.find(p => !p.symbol.equals(w.symbol)).get
         loser.loss
+
+        println(" The winner is: " + w.name + "currently holding a record of " + w.wins + " and " + w.losses + " losses")
       }
     }
 
@@ -274,7 +278,7 @@ object Main extends App {
       case true => Random.shuffle(parameters.players).head
       case false => parameters.players.find(p => !p.equals(parameters.lastWinner.get)).getOrElse(parameters.lastWinner.get)
     }
-    
+
     parameters.players.find(p => !p.equals(starting)).get.symbol = Symbol.O
     starting.symbol = Symbol.X
 
