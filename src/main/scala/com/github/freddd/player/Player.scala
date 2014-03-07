@@ -9,8 +9,31 @@ import com.github.freddd.board.Symbol._
  */
 trait Player {
   var name: String = ""
-  var wins: Int = 0
-  var losses: Int = 0
-  var moves: List[Map[Int, (Int,Int)]] = List.empty
+  var _wins: Int = 0
+  var _draw: Int = 0
+  var _losses: Int = 0
+  var moves: List[Map[Int, (Int, Int)]] = List.empty
   var symbol: Symbol = Symbol.UNDEFINED
+
+  def wins: Int = _wins
+  def losses: Int = _losses
+  def draws: Int = _draw
+
+  def draw: Player = {
+    _draw += 1
+
+    this
+  }
+
+  def win: Player = {
+    _wins += 1
+
+    this
+  }
+
+  def loss: Player = {
+    _losses += 1
+
+    this
+  }
 }

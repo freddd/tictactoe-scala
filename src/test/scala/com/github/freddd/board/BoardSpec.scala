@@ -37,11 +37,11 @@ class BoardSpec extends Specification {
     }
   }
 
-  "board.completed" should {
+  "board.filled" should {
     val board: Board = new Board()
 
     "Fail any square is empty" in {
-      board.completed must beFalse
+      board.filled must beFalse
     }
 
 
@@ -57,7 +57,7 @@ class BoardSpec extends Specification {
       b.move(Symbol.X,2,1)
       b.move(Symbol.X,2,2)
 
-      b.completed must beTrue
+      b.filled must beTrue
 
       b.reset()
     }
@@ -201,6 +201,40 @@ class BoardSpec extends Specification {
 
       b.win(Symbol.X) must beFalse
     }
+  }
+
+  "board.winner" should {
+
+    "Return X if X has populated three consecutive squares" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,0)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.O,1,2)
+      b.move(Symbol.O,2,0)
+      b.move(Symbol.X,2,1)
+      b.move(Symbol.X,2,2)
+
+      b.winner.equals(Symbol.X) must beTrue
+    }
+
+    "Return UNDEFINED if the game is a draw" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,0)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.O,1,2)
+      b.move(Symbol.O,2,0)
+      b.move(Symbol.X,2,1)
+      b.move(Symbol.O,2,2)
+
+      b.winner.equals(Symbol.UNDEFINED) must beTrue
+    }
+
   }
 
   "board.draw" should {

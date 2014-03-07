@@ -1,8 +1,6 @@
 package com.github.freddd.game
 
 import com.github.freddd.player._
-import Mode.Mode
-import Level.Level
 import scala.util.Random
 import com.github.freddd.board._
 import com.github.freddd.player.Mode.Mode
@@ -27,7 +25,7 @@ object Main extends App {
     params = parameters(params)
 
     // Play game
-    play(params)
+    params = play(params)
 
     // Play again?
     running = again()
@@ -46,8 +44,8 @@ object Main extends App {
     println(" a) Player X starts (random), after that it's alternating turns (X,O,X,O etc) ")
     println(" b) Either player can win by having three of their symbols (X or O) ")
     println("    in a row (horizontal, vertical or diagonal) ")
-    println(" c) In cases of multiple rounds, the player that won last round will start as O" )
-    println("    if last round was a draw the order will be the same ")
+    println(" c) In cases of multiple rounds, the player that won last round will start as O")
+    println("    if last round was a draw the order will remain the same ")
     println(" - - - - - - - - - ")
   }
 
@@ -140,24 +138,48 @@ object Main extends App {
   /**
    * Handling the actual game play
    */
-  private def play(parameters: Parameters) {
+  private def play(parameters: Parameters): Parameters = {
     val board = new Board()
     println("")
     println(" Starting is player (X): " + parameters.starting.name + " currently holding " + parameters.starting.wins + " and " + parameters.starting.losses)
+    println(" 1,1 -> 3,3 ")
     println(" ----------------------- ")
     println(" " + board.toString)
     println("")
 
-    while(!board.draw || board.win(Symbol.X) || board.win(Symbol.O)){
-      println(" ")
+    var current = parameters.starting.symbol
+
+    while (!board.draw || !board.win(Symbol.X) || !board.win(Symbol.O)) {
+
+      print(" Play (X, Y): ")
+      val move: String = Console.readLine()
+
+      try {
+        val x = move.split(",")(0).toInt - 1
+        val y = move.split(",")(1).toInt - 1
+
+        board.validMove(x, y) match {
+          case true => board.move(current, x, y)
+          case false => println(" Please try again, there is already a symbol in the square or it's out of bounds ")
+        }
+      } catch {
+        case e: NumberFormatException => println(" It has to be a number.... ")
+      }
+
+      current = current match {
+        case Symbol.X => Symbol.O
+        case _ => Symbol.X
+      }
+
+      println(" " + board.toString)
     }
 
-    parameters.lastWinner = parameters.players.find()
+    setPlayerData(board.draw, parameters, parameters.players.find(p => p.symbol.equals(board.winner)))
   }
 
   /**
    * Handling game play parameters
-   * @param parameters
+   * @param parameters new parameters or parameters set in the previous round
    * @return
    */
   private def parameters(parameters: Parameters): Parameters = {
@@ -180,8 +202,31 @@ object Main extends App {
   }
 
   /**
+   * Setting the player data after a game
+   * @param draw whether or not the game was a draw
+   * @param params game parameters
+   * @param winner the winner of the previous game (if there was one)
+   * @return
+   */
+  private def setPlayerData(draw: Boolean, params: Parameters, winner: Option[Player]): Parameters = {
+    draw match {
+      case true => params.players = params.players.map(p => p.draw)
+      case _ => {
+        val w = params.players.find(p => p.symbol.equals(winner.get)).get
+        w.win
+        params.lastWinner = Some(w)
+
+        val loser = params.players.find(p => !p.symbol.equals(winner.get)).get
+        loser.loss
+      }
+    }
+
+    params
+  }
+
+  /**
    * Asking for player name
-   * @param number
+   * @param number the order of the player being asked for its name
    * @return
    */
   private def playerInfo(number: Int): String = {

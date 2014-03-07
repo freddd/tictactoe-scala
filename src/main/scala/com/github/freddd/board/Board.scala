@@ -34,17 +34,17 @@ class Board {
   def reset(): Unit = {board = Array.tabulate[Option[Symbol]](3,3)((x, y) => None)}
 
   /**
-   * Convenience method to know whether the game is completed or not
+   * Convenience method to know whether the game is filled or not
    * @return
    */
-  def completed: Boolean = board forall { p => p forall { p2 => p2.isDefined} }
+  def filled: Boolean = board forall { p => p forall { p2 => p2.isDefined} }
 
   /**
    * Convenience method to know whether or not the game is a draw
    * @return
    */
   def draw: Boolean = {
-    completed match {
+    filled match {
       case true => !win(Symbol.O) && !win(Symbol.X)
       case _ => false
     }
@@ -56,6 +56,22 @@ class Board {
    * @return
    */
   def win(symbol: Symbol): Boolean = horizontal(symbol) || vertical(symbol) || diagonal(symbol)
+
+  /**
+   * Returning the winner
+   * @return
+   */
+  def winner: Symbol = {
+    draw match {
+      case true => Symbol.UNDEFINED
+      case _ => {
+        win(Symbol.O) match {
+          case true => Symbol.O
+          case _ => Symbol.X
+        }
+      }
+    }
+  }
 
   /**
    * Used by <method>win</method> to assess if either player has 3 symbols in a row horizontally
