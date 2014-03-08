@@ -21,8 +21,10 @@ object Main extends App {
   while (running) {
 
     // Init
-    printHeader()
-    params = parameters(params)
+    if(params.first){
+      printHeader()
+      params = parameters(params)
+    }
 
     // Play game
     params = play(params)
@@ -139,13 +141,15 @@ object Main extends App {
    * Handling the actual game play
    */
   private def play(parameters: Parameters): Parameters = {
+    parameters.starting = starts(parameters)
+
     val board = new Board()
     println("")
-    println(" Starting is player (X): " + parameters.starting.name + " currently holding " + parameters.starting.wins + " and " + parameters.starting.losses)
+    println(" Starting is player (X): " + parameters.starting.name + " - currently holding " + parameters.starting.wins + " and " + parameters.starting.losses)
     println(" ----------------------- ")
     println(" X,Y (1,1 -> 3,3) ")
-    println(board.toString)
     println("")
+    println(board.toString)
 
     var current = parameters.starting.symbol
     var gameOver = false
@@ -166,7 +170,7 @@ object Main extends App {
       }
 
       println(board.toString)
-      gameOver = board.gameOver // TODO create a convenience method in Board
+      gameOver = board.gameOver
     }
 
     setPlayerData(board.draw, parameters, parameters.players.find(p => p.symbol.equals(board.winner)))
@@ -224,9 +228,6 @@ object Main extends App {
       case _ => parameters.players = parameters.players ++ List(new Human(playerInfo(2)))
     }
 
-    // Decide who is starting
-    parameters.starting = starts(parameters)
-
     parameters
   }
 
@@ -248,7 +249,7 @@ object Main extends App {
         val loser = params.players.find(p => !p.symbol.equals(w.symbol)).get
         loser.loss
 
-        println(" The winner is: " + w.name + "currently holding a record of " + w.wins + " and " + w.losses + " losses")
+        println(" The winner is: " + w.name + " - currently holding a record of " + w.wins + " and " + w.losses + " losses")
       }
     }
 
