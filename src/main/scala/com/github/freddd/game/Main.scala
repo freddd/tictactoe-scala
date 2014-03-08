@@ -166,7 +166,7 @@ object Main extends App {
       }
 
       println(board.toString)
-      gameOver = board.draw || board.win(Symbol.X) || board.win(Symbol.O) // TODO create a convenience method in Board
+      gameOver = board.gameOver // TODO create a convenience method in Board
     }
 
     setPlayerData(board.draw, parameters, parameters.players.find(p => p.symbol.equals(board.winner)))

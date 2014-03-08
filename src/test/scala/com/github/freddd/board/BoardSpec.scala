@@ -269,4 +269,51 @@ class BoardSpec extends Specification {
       b.draw must beFalse
     }
   }
+
+  "board.gameOver" should {
+
+    "Succeed if X or O has populated three consecutive squares" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,0)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.O,1,2)
+      b.move(Symbol.O,2,0)
+      b.move(Symbol.X,2,1)
+      b.move(Symbol.X,2,2)
+
+      b.gameOver must beTrue
+    }
+
+    "Succeed if its a draw" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,0)
+      b.move(Symbol.X,1,1)
+      b.move(Symbol.O,1,2)
+      b.move(Symbol.O,2,0)
+      b.move(Symbol.X,2,1)
+      b.move(Symbol.O,2,2)
+
+      b.gameOver must beTrue
+    }
+
+    "Fail if its not yet a draw and nobody has won" in {
+      val b: Board = new Board()
+      b.move(Symbol.X,0,0)
+      b.move(Symbol.O,0,1)
+      b.move(Symbol.X,0,2)
+      b.move(Symbol.O,1,2)
+      b.move(Symbol.O,2,0)
+      b.move(Symbol.X,2,1)
+      b.move(Symbol.O,2,2)
+
+      b.gameOver must beFalse
+    }
+
+  }
 }

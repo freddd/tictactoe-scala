@@ -74,6 +74,12 @@ class Board {
   }
 
   /**
+   * Convenience method for finding out if the game is over
+   * @return
+   */
+  def gameOver: Boolean = draw || win(Symbol.X) || win(Symbol.O)
+
+  /**
    * Used by <method>win</method> to assess if either player has 3 symbols in a row horizontally
    * @param symbol X or O
    * @return
